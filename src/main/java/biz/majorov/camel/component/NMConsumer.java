@@ -14,46 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package camelinaction.component;
+package biz.majorov.camel.component;
 
 import java.util.Date;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.impl.DefaultConsumer;
 import org.apache.camel.impl.ScheduledPollConsumer;
 
 /**
  * The MyConsumer.
  */
-public class MyConsumer extends ScheduledPollConsumer {
-    private final MyEndpoint endpoint;
+public class NMConsumer extends DefaultConsumer {
+    private final NMEndpoint endpoint;
 
-    public MyConsumer(MyEndpoint endpoint, Processor processor) {
+    public NMConsumer(NMEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.endpoint = endpoint;
     }
 
-    @Override
-    // poll method will fire every 500 ms by default 
-    protected int poll() throws Exception {
-        Exchange exchange = endpoint.createExchange();
-
-        // create a message body
-        Date now = new Date();
-        exchange.getIn().setBody("Hello World! The time is " + now);
-
-        try {
-            // send message to next processor in the route
-            getProcessor().process(exchange);
-        } finally {
-            // log exception if an exception occurred and was not handled
-            if (exchange.getException() != null) {
-                getExceptionHandler().handleException("Error processing exchange", exchange, exchange.getException());
-            }
-        }
-
-        // we consumed 1 message
-        return 1;
-    }
+   
 
 }

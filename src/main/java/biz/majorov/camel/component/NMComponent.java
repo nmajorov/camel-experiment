@@ -14,34 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package camelinaction.component;
+package biz.majorov.camel.component;
 
-import org.apache.camel.Consumer;
-import org.apache.camel.Processor;
-import org.apache.camel.Producer;
-import org.apache.camel.impl.DefaultEndpoint;
+import java.util.Map;
+
+import org.apache.camel.Endpoint;
+import org.apache.camel.impl.DefaultComponent;
 
 /**
- * Represents a my endpoint.
+ * Represents the component that manages {@link HelloWorldEndpoint}.
  */
-public class MyEndpoint extends DefaultEndpoint {
+public class NMComponent extends DefaultComponent {
 
-    public MyEndpoint() {
-    }
-
-    public MyEndpoint(String uri, MyComponent component) {
-        super(uri, component);
-    }
-
-    public Producer createProducer() throws Exception {
-        return new MyProducer(this);
-    }
-
-    public Consumer createConsumer(Processor processor) throws Exception {
-        return new MyConsumer(this, processor);
-    }
-
-    public boolean isSingleton() {
-        return true;
+    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+        Endpoint endpoint = new NMEndpoint(uri, this);
+        setProperties(endpoint, parameters);
+        return endpoint;
     }
 }

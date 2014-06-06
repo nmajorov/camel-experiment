@@ -26,17 +26,19 @@
   <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
     <property name="connectionFactory">
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="vm://localhost" />
+      	<!--  disable persistence for  broker -->
+        <property name="brokerURL" value="vm://localhost?broker.persistent=false&roker.use
+Jmx=false" />
       </bean>
     </property>
   </bean>
 
-  <bean id="downloadLogger" class="camelinaction.DownloadLogger"/>
+  <bean id="NMLogger" class="biz.majorov.camel.Logger"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
     <route>
       <from uri="mycomponent://nm"/>
-      <process ref="downloadLogger"/>
+      <process ref="NMLogger"/>
       <to uri="jms:incomingOrders"/>
     </route>
   </camelContext>

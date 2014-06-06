@@ -14,28 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package camelinaction.component;
+package biz.majorov.camel.component;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.camel.Consumer;
+import org.apache.camel.Processor;
+import org.apache.camel.Producer;
+import org.apache.camel.impl.DefaultEndpoint;
 
 /**
- * The HelloWorld producer.
+ * Represents a my endpoint.
  */
-public class MyProducer extends DefaultProducer {
-    private static final transient Logger LOG = LoggerFactory.getLogger(MyProducer.class);
-    private MyEndpoint endpoint;
+public class NMEndpoint extends DefaultEndpoint {
 
-    public MyProducer(MyEndpoint endpoint) {
-        super(endpoint);
-        this.endpoint = endpoint;
+    public NMEndpoint() {
     }
 
-    public void process(Exchange exchange) throws Exception {
-    	LOG.info(exchange.getIn().getBody().toString());
-        System.out.println(exchange.getIn().getBody());    
+    public NMEndpoint(String uri, NMComponent component) {
+        super(uri, component);
     }
 
+    public Producer createProducer() throws Exception {
+        return new NMProducer(this);
+    }
+
+    public Consumer createConsumer(Processor processor) throws Exception {
+        return new NMConsumer(this, processor);
+    }
+
+    public boolean isSingleton() {
+        return true;
+    }
 }

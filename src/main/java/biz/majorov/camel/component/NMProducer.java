@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package camelinaction.component;
+package biz.majorov.camel.component;
 
-import java.util.Map;
-
-import org.apache.camel.Endpoint;
-import org.apache.camel.impl.DefaultComponent;
+import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Represents the component that manages {@link HelloWorldEndpoint}.
+ * The HelloWorld producer.
  */
-public class MyComponent extends DefaultComponent {
+public class NMProducer extends DefaultProducer {
+    private static final transient Logger LOG = LoggerFactory.getLogger(NMProducer.class);
+    private NMEndpoint endpoint;
 
-    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        Endpoint endpoint = new MyEndpoint(uri, this);
-        setProperties(endpoint, parameters);
-        return endpoint;
+    public NMProducer(NMEndpoint endpoint) {
+        super(endpoint);
+        this.endpoint = endpoint;
     }
+
+    public void process(Exchange exchange) throws Exception {
+    	LOG.info(exchange.getIn().getBody().toString());
+        System.out.println(exchange.getIn().getBody());    
+    }
+
 }
