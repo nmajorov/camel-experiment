@@ -35,7 +35,7 @@
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
     <route>
-      <from uri="file:src/data?noop=true"/>
+      <from uri="mycomponent://nm"/>
       <process ref="downloadLogger"/>
       <to uri="jms:incomingOrders"/>
     </route>

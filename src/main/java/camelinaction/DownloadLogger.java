@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package camelinaction;
 
 import org.apache.camel.Exchange;
