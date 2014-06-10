@@ -1,4 +1,4 @@
-this project demonstrate  own  camel udp consumer
+this project demonstrate  custom  camel udp consumer
 =====================================================
 
 The UDP protocol receiver written in ruby. see :
