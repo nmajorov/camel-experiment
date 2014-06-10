@@ -20,13 +20,17 @@ import java.util.Map;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Represents the component that manages {@link HelloWorldEndpoint}.
+ * Represents the component 
  */
 public class NMComponent extends DefaultComponent {
+	private static final Logger LOG = LoggerFactory.getLogger(NMComponent.class);
 
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+    	LOG.info("creating Endpoint..");
         Endpoint endpoint = new NMEndpoint(uri, this);
         setProperties(endpoint, parameters);
         return endpoint;

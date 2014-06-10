@@ -16,24 +16,75 @@
  */
 package biz.majorov.camel.component;
 
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultConsumer;
-import org.apache.camel.impl.ScheduledPollConsumer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import biz.majorov.camel.UDPReceiver;
 
 /**
- * The MyConsumer.
+ * The Custom made Camel Consumer.
  */
-public class NMConsumer extends DefaultConsumer {
-    private final NMEndpoint endpoint;
+public class NMConsumer extends DefaultConsumer  {
+   
+	
+    private static final Log logger = LogFactory.getLog(NMConsumer.class);
+
+    public NMConsumer(NMEndpoint endpoint, Processor processor,String uri) {
+        super(endpoint, processor);
+        
+    }
 
     public NMConsumer(NMEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
-        this.endpoint = endpoint;
+    }
+    
+    @Override
+    protected void doStart() throws Exception {
+        super.doStart();
+        logger.info("start ");
+         
+        SocketHandler handler = new ReceiverHandler();
+        UDPReceiver receiver = new UDPReceiver();
+        receiver.listen(handler);
     }
 
+    @Override
+    protected void doStop() throws Exception {
+        super.doStop();
+        logger.info("do stop");
+    }
+
+
+	public void run() {
+		logger.info("run");
+		
+		try {
+			Exchange exchange = getEndpoint().createExchange();
+			exchange.getIn().setBody("");
+		} catch (Exception ex) {
+			log.error("Error", ex);
+		}
+	}
    
+	 private final class ReceiverHandler implements SocketHandler{
+
+		public void messageReceived(Object message) throws Exception {
+			
+                Object in = message;
+                if (in instanceof byte[]) {
+                    // byte arrays is not readable so convert to string
+                    in = getEndpoint().getCamelContext().getTypeConverter().convertTo(String.class, in);
+                }
+                logger.info("Received body:" +  in);
+                
+                Exchange exchange = getEndpoint().createExchange();
+                exchange.getIn().setBody(message);
+                getProcessor().process(exchange);
+		}
+		 
+	 }
 
 }

@@ -23,12 +23,11 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
+  <bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
     <property name="connectionFactory">
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
       	<!--  disable persistence for  broker -->
-        <property name="brokerURL" value="vm://localhost?broker.persistent=false&roker.use
-Jmx=false" />
+        <property name="brokerURL" value="vm://localhost?broker.persistent=false" />
       </bean>
     </property>
   </bean>
@@ -37,7 +36,7 @@ Jmx=false" />
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
     <route>
-      <from uri="mycomponent://nm"/>
+      <from uri="nmcomponent://nm"/>
       <process ref="NMLogger"/>
       <to uri="jms:incomingOrders"/>
     </route>

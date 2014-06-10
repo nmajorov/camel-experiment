@@ -20,28 +20,42 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a my endpoint.
  */
 public class NMEndpoint extends DefaultEndpoint {
+	private static final Logger LOG = LoggerFactory.getLogger(NMEndpoint.class);
+
 
     public NMEndpoint() {
     }
 
     public NMEndpoint(String uri, NMComponent component) {
+    	
         super(uri, component);
+        
+        LOG.info("endpoint created");
     }
 
     public Producer createProducer() throws Exception {
+    	LOG.info("creating Producer");
         return new NMProducer(this);
     }
 
-    public Consumer createConsumer(Processor processor) throws Exception {
-        return new NMConsumer(this, processor);
+    public Consumer createConsumer(Processor processor,String uri) throws Exception {
+    	LOG.info("creating consumer with uri");
+        return new NMConsumer(this, processor, uri);
     }
 
     public boolean isSingleton() {
         return true;
     }
+
+	public Consumer createConsumer(Processor processor) throws Exception {
+		LOG.info("creating consumer");
+		return new NMConsumer(this, processor);
+	}
 }
