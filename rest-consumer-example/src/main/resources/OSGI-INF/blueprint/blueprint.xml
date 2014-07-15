@@ -13,21 +13,58 @@
 
 
 
+  <jaxrs:server id="rsServer" address="/inc">
+        <jaxrs:serviceBeans>
+            <ref component-id="myservice"/>
+        </jaxrs:serviceBeans>
+        
+  </jaxrs:server>
+
+  <bean id="myservice" class="biz.majorov.camel.incident.IncidentService" />
+
 
 <!-- Defined the server endpoint to create the cxf-rs consumer -->
-  <cxf:rsClient id="rsClient" address="/inc"
+  <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incidentservice/reportincident/"
     serviceClass="biz.majorov.camel.incident.IncidentService" 
     loggingFeatureEnabled="true"/>
 
-
+<!--
+<cxf:rsServer id="rsServer" address="/inc"
+    serviceClass="biz.majorov.camel.incident.IncidentService" 
+    loggingFeatureEnabled="true"/>
+-->
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
 
 		<route id="cxf">
+       <from uri="activemq:topic:surveillance.data" />
 			 <!-- route starts from the cxf webservice in POJO mode -->
        <to uri="cxfrs://bean://rsClient"/>
 			 
 		</route>
 
 	</camelContext>
+
+
+
+<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+ 
+  <property name="brokerURL" value="vm://localhost" />
+  <property name="userName" value="admin" />
+  <property name="password" value="admin" />
+ </bean>
+
+ <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+  init-method="start" destroy-method="stop">
+  <property name="connectionFactory" ref="jmsConnectionFactory" />
+ </bean>
+
+ <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+  <property name="connectionFactory" ref="pooledConnectionFactory" />
+ </bean>
+
+ <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+  <property name="configuration" ref="jmsConfig" />
+ </bean>
+
 
 </blueprint>

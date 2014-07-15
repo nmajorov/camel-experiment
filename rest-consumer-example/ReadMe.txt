@@ -11,19 +11,19 @@ or Apache Karaf. You need to install the following features first:
     features:install camel-jaxb
     features:install camel-cxf
 
+You don't need to do this step for JBoss Fuse 6.x-    
+
+
 And then you can install this example from its shell:
 
-    osgi:install -s mvn:biz.majorov.camel/rest-consumer-example/1.0-SNAPSHOT
+    osgi:install -s mvn:biz.majorov.camel/rest-consumer-example/1.0.0-SNAPSHOT
 
 The web services from Apache CXF is usually listed at:
 
     http://localhost:8181/cxf
 
-And the WSDL file for this example at:
+And the WADL file for this example at:
 
-    http://localhost:8181/cxf/report/?wsdl
+   http://localhost:8181/cxf/inc/?_wadl
 
-For more help see the Apache Camel documentation
-
-    http://camel.apache.org/
 
