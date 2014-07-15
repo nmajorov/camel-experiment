@@ -2,11 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>biz.majorov.camel</groupId>
-	<artifactId>chapter-experiment</artifactId>
-	<name>NM camel experiment</name>
-	<version>1.0</version>
+	<artifactId>udp-consumer-example</artifactId>
+	<name>NM cameli udp cosnumer  experiment</name>
+	
+	<parent>
+		<groupId>biz.majorov.camel</groupId>
+    	<artifactId>camel-experiments</artifactId>
+    	<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
 	<properties>
 		<activemq-version>5.9.1</activemq-version>
