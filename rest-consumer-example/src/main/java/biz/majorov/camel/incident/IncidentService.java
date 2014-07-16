@@ -16,8 +16,6 @@
  */
 package biz.majorov.camel.incident;
 
-
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -39,45 +37,48 @@ import org.slf4j.LoggerFactory;
  * This is a basic example, you can use the JAX-WS annotations to control the contract.
  */
 
-@Path("/incidentservice/")
+@Path("/incidents/")
 public class IncidentService {
      private static final Logger LOG = LoggerFactory.getLogger(IncidentService.class);
       long LOWER_RANGE = 0; //assign lower range value
  	 long UPPER_RANGE = 1000000; //assign upper range value
  	 Random random = new Random();
 
- 	Map<Long, String> storage = new HashMap<Long, String>();
+ 	Map<Long, Incident> storage = new HashMap<Long, Incident>();
 
      public IncidentService(){}
     /**
      * Operation to report an incident
      */
     @POST
-    @Path("/reportincident/{description}/")
-    @Consumes({"text/plain,text/html"})
-    public Response reportIncident(@PathParam("description") String description){
-        LOG.info("reportIncident : " + description);
+    @Path("/report/")
+    public Response reportIncident(Incident incident){
+
         long randomValue = LOWER_RANGE + 
                            (long)(random.nextDouble()*(UPPER_RANGE - LOWER_RANGE));
-        storage.put(randomValue, description);
+        incident.setId(randomValue);
+        storage.put(randomValue, incident);
+         LOG.info("report new incident with id : " + randomValue);
         return Response.ok().build();
     }
 
     /**
-     * Operation to get the status of an incident
+     * Operation to get an incident
      */
     @GET
     @Path("/incident/{id}/")
-    @Produces("text/plain")
-    public String statusIncident(@PathParam("id") String id){
+    @Produces("application/xml")
+    public Response getIncident(@PathParam("id") String id){
         LOG.info("get incident by: " + id);
-        String r;
-        String descr = storage.get(id);
+        Response r;
+        Incident incident = storage.get(id);
         
-        if (descr == null){
-        	r =  "Not Found";
+        if (incident == null){
+             LOG.info("incident not found for id: " + id);
+        	r =  Response.status(Response.Status.NOT_FOUND).build();
         }else{
-        	r =descr;
+             LOG.info("found incident "+ incident +"  for id: " + id);
+        	r =Response.ok(incident).build();
         }
         return r;
     }

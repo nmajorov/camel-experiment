@@ -27,3 +27,12 @@ And the WADL file for this example at:
    http://localhost:8181/cxf/inc/?_wadl
 
 
+
+
+To test rest service with curl:
+
+        cd camel-experiment/rest-consumer-example/src/test/resources
+
+        curl -v -X POST -d @incident.xml http://localhost:8181/cxf/inc/incidents/report -H "Content-Type: text/xml"
+
+        curl -v -X GET http://localhost:8181/cxf/inc/incidents/incident/123

@@ -20,10 +20,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
      <activemq-version>5.9.1</activemq-version>
+      <cxf-version>3.0.0</cxf-version>
   </properties>
 
 
   <dependencies>
+      <!--
+        pull it first for tests
+      -->
+       <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-all</artifactId>
+        <version>4.1</version>
+          <scope>test</scope>
+      </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
@@ -53,6 +63,114 @@
       <version>${activemq-version}</version>
     </dependency>
 
+
+      <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test-blueprint</artifactId>
+      <version>2.12.2</version>
+       <scope>test</scope>
+    </dependency>
+
+
+
+
+
+
+
+
+    <!-- additional dependencies  -->
+<!--      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-ws-addr</artifactId>
+        <version>2.6.0.fuse-71-047</version>
+      </dependency> -->
+
+
+
+      <!--  osgi  -->
+      <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.core</artifactId>
+          <version>4.3.1</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.compendium</artifactId>
+         <version>4.3.1</version>
+          <scope>test</scope>
+      </dependency>
+
+
+      <!--  test -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-pool</artifactId>
+          <version>${activemq-version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.6</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.17</version>
+          <scope>test</scope>
+      </dependency>
+
+       <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http</artifactId>
+      <version>2.12.2</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http</artifactId>
+      <version>${cxf-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-bindings-soap</artifactId>
+      <version>${cxf-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http-jetty</artifactId>
+      <version>${cxf-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-testutils</artifactId>
+      <version>${cxf-version}</version>
+      <scope>test</scope>
+    </dependency>
+
+      <!-- for jaxrs providers test -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-extension-providers</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
+        <version>1.3.5</version>
+      <scope>test</scope>
+    </dependency>
+
+
   </dependencies>
 
   <build>
@@ -68,6 +186,7 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>

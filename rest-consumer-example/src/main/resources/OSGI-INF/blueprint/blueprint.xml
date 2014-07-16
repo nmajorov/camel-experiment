@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-                                                                <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
             xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
@@ -11,34 +12,34 @@
 
 
 
-
+  <!-- create rest service -->
 
   <jaxrs:server id="rsServer" address="/inc">
         <jaxrs:serviceBeans>
             <ref component-id="myservice"/>
         </jaxrs:serviceBeans>
-        
+
+        <jaxrs:providers>
+            <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+        </jaxrs:providers>
   </jaxrs:server>
 
   <bean id="myservice" class="biz.majorov.camel.incident.IncidentService" />
 
 
 <!-- Defined the server endpoint to create the cxf-rs consumer -->
-  <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incidentservice/reportincident/"
+  <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incident/report/"
     serviceClass="biz.majorov.camel.incident.IncidentService" 
-    loggingFeatureEnabled="true"/>
+    loggingFeatureEnabled="true" />
 
-<!--
-<cxf:rsServer id="rsServer" address="/inc"
-    serviceClass="biz.majorov.camel.incident.IncidentService" 
-    loggingFeatureEnabled="true"/>
--->
-	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint" id="nm-context">
 
 		<route id="cxf">
-       <from uri="activemq:topic:surveillance.data" />
-			 <!-- route starts from the cxf webservice in POJO mode -->
-       <to uri="cxfrs://bean://rsClient"/>
+           <from uri="file:work/inc/input" />
+           <log message="Receiving order ${file:name}" />
+	  <!-- route starts from the cxf webservice in POJO mode -->
+            <to uri="cxfrs://bean://rsClient"/>
 			 
 		</route>
 
@@ -46,25 +47,7 @@
 
 
 
-<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
- 
-  <property name="brokerURL" value="vm://localhost" />
-  <property name="userName" value="admin" />
-  <property name="password" value="admin" />
- </bean>
 
- <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
-  init-method="start" destroy-method="stop">
-  <property name="connectionFactory" ref="jmsConnectionFactory" />
- </bean>
-
- <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
-  <property name="connectionFactory" ref="pooledConnectionFactory" />
- </bean>
-
- <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-  <property name="configuration" ref="jmsConfig" />
- </bean>
 
 
 </blueprint>
