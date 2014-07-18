@@ -4,7 +4,6 @@ Camel Router  for Apache CXF  Blueprint (OSGi)
 
 This example shows how to create a camel route which read a file and send it to the Restful service endpoint.
 
-            ```xml
 
             <route id="cxf">
             <from uri="file:work/inc/input"/>
@@ -12,7 +11,8 @@ This example shows how to create a camel route which read a file and send it to 
             <to uri="cxfrs://bean://rsClient?provider=#myProvider"/>
             </route>
 
-            ```
+
+
 The custom file to xml restful provider has to be defined in the blueprint configuration.
 
 
