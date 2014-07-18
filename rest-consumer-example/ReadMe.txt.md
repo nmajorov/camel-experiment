@@ -1,5 +1,19 @@
-Camel Router Project for Apache CXF code-first using Blueprint (OSGi)
+Camel Router  for Apache CXF  Blueprint (OSGi)
 =========================================================================
+
+
+This example shows how to create a camel route which read a file and send it to the Restful service endpoint.
+
+
+
+            <route id="cxf">
+            <from uri="file:work/inc/input"/>
+            <log message="Receiving incident ${file:name}"/>
+            <to uri="cxfrs://bean://rsClient?provider=#myProvider"/>
+            </route>
+
+The custom file to xml restful provider has to be defined in the blueprint configuration.
+
 
 To build this project use
 
@@ -11,7 +25,7 @@ or Apache Karaf. You need to install the following features first:
     features:install camel-jaxb
     features:install camel-cxf
 
-You don't need to do this step for JBoss Fuse 6.x-    
+You don't need to do this step for JBoss Fuse 6.x
 
 
 And then you can install this example from its shell:
