@@ -33,7 +33,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 /**
+ * Custom restful service provider for camel GenericFile type
+ *
  * created : 16.07.14 09:28
+ *
  *
  * @author Nikolaj Majorov
  */
@@ -187,7 +190,7 @@ public class NMCXFProvider extends AbstractConfigurableProvider
     public void writeTo(Object o, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
         LOG.info("writeTo");
         GenericFile file = (GenericFile) o;
-        LOG.info("file body type: " + file.getBody().getClass().getCanonicalName());
+        //LOG.info("file body type: " + file.getBody().getClass().getCanonicalName());  //java.io.File
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document dom = documentBuilder.parse((File) file.getFile());
