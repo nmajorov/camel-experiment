@@ -31,17 +31,14 @@ And the WADL file for this example at:
 
 To test rest service with curl:
 
-        cd camel-experiment/rest-consumer-example/src/test/resources
 
-        curl -v -X POST -d @incident.xml http://localhost:8181/cxf/inc/incidents/report -H "Content-Type: text/xml"
-
-or :
-
-
+Send incident with command:
 
       curl -v -X POST -T <path>/rest-consumer-example/src/test/resources/incident.xml   http://localhost:8181/cxf/inc/incidents/report -H "Content-Type: text/xml"
 
 
- curl -v -X GET http://localhost:8181/cxf/inc/incidents/incident/637807
+Get incident with command:
+
+      curl -v -X GET http://localhost:8181/cxf/inc/incidents/incident/637807
 
 
