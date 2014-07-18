@@ -3,7 +3,7 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
-            xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
            xsi:schemaLocation="
              http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
              http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
@@ -11,43 +11,36 @@
              http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
 
+    <!-- create rest service -->
 
-  <!-- create rest service -->
-
-  <jaxrs:server id="rsServer" address="/inc">
+    <jaxrs:server id="rsServer" address="/inc">
         <jaxrs:serviceBeans>
             <ref component-id="myservice"/>
         </jaxrs:serviceBeans>
 
 
-  </jaxrs:server>
+    </jaxrs:server>
 
-  <bean id="myservice" class="biz.majorov.camel.incident.IncidentService" />
+    <bean id="myservice" class="biz.majorov.camel.incident.IncidentService"/>
 
-   <bean id="myProvider" class="biz.majorov.camel.incident.NMCXFProvider" />
-
-
-<!-- Defined the server endpoint to create the cxf-rs consumer -->
-  <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incident/report/"
-    serviceClass="biz.majorov.camel.incident.IncidentService" 
-    loggingFeatureEnabled="true" />
+    <bean id="myProvider" class="biz.majorov.camel.incident.NMCXFProvider"/>
 
 
-	<camelContext xmlns="http://camel.apache.org/schema/blueprint" id="nm-context">
+    <!-- Defined the server endpoint to create the cxf-rs consumer -->
+    <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incidents/report"
+                  serviceClass="biz.majorov.camel.incident.IncidentService"
+                  loggingFeatureEnabled="true"/>
 
-		<route id="cxf">
-           <from uri="file:work/inc/input" />
-           <log message="Receiving order ${file:name}" />
-	  <!-- route starts from the cxf webservice in POJO mode -->
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint" id="nm-context">
+
+        <route id="cxf">
+            <from uri="file:work/inc/input"/>
+            <log message="Receiving incident ${file:name}"/>
             <to uri="cxfrs://bean://rsClient?provider=#myProvider"/>
-			 
-		</route>
+        </route>
 
-	</camelContext>
-
-
-
-
+    </camelContext>
 
 
 </blueprint>
