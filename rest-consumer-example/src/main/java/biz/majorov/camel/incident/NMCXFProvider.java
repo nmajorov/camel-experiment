@@ -1,17 +1,36 @@
 package biz.majorov.camel.incident;
 
- import org.apache.cxf.jaxrs.provider.AbstractConfigurableProvider;
+import org.apache.cxf.jaxrs.provider.AbstractConfigurableProvider;
 
- import javax.ws.rs.WebApplicationException;
- import javax.ws.rs.core.MediaType;
- import javax.ws.rs.core.MultivaluedMap;
- import javax.ws.rs.ext.MessageBodyReader;
- import javax.ws.rs.ext.MessageBodyWriter;
- import java.io.IOException;
- import java.io.InputStream;
- import java.io.OutputStream;
- import java.lang.annotation.Annotation;
- import java.lang.reflect.Type;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.MessageBodyWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+
+import org.apache.camel.component.file.GenericFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerConfigurationException;
+
+import javax.xml.transform.dom.DOMSource;
+
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * created : 16.07.14 09:28
@@ -19,7 +38,10 @@ package biz.majorov.camel.incident;
  * @author Nikolaj Majorov
  */
 public class NMCXFProvider extends AbstractConfigurableProvider
-    implements MessageBodyReader<Object>, MessageBodyWriter<Object>  {
+        implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
+
+
+    private static final Logger LOG = LoggerFactory.getLogger(NMCXFProvider.class);
 
 
     /**
@@ -49,6 +71,7 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      */
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        LOG.info("isReadable");
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -80,7 +103,8 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      */
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        LOG.debug("called readFrom method ");
+        throw new RuntimeException("not yet implemented");
     }
 
     /**
@@ -98,7 +122,19 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      */
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        LOG.info("called isWriteable method");
+
+        if (type == null) {
+            return false;
+        }
+
+        if (type.isAssignableFrom(GenericFile.class)) {
+            LOG.debug(" isWriteable true");
+            return true;
+
+        }
+
+        return false;
     }
 
     /**
@@ -106,7 +142,7 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      * the serialized form of {@code t}. A non-negative return value is
      * used in a HTTP {@code Content-Length} header.
      *
-     * @param t           the instance to write
+     * @param o           the instance to write
      * @param type        the class of object that is to be written.
      * @param genericType the type of object to be written, obtained either
      *                    by reflection of a resource method return type or by inspection
@@ -120,6 +156,7 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      */
     @Override
     public long getSize(Object o, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        LOG.info("getSize");
         return 0;
     }
 
@@ -128,7 +165,7 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      * but any changes must be made before writing to the output stream since
      * the headers will be flushed prior to writing the message body.
      *
-     * @param t            the instance to write.
+     * @param o            the instance to write.
      * @param type         the class of object that is to be written.
      * @param genericType  the type of object to be written, obtained either
      *                     by reflection of a resource method return type or by inspection
@@ -148,6 +185,30 @@ public class NMCXFProvider extends AbstractConfigurableProvider
      */
     @Override
     public void writeTo(Object o, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+        LOG.info("writeTo");
+        GenericFile file = (GenericFile) o;
+        LOG.info("file body type: " + file.getBody().getClass().getCanonicalName());
+        try {
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document dom = documentBuilder.parse((File) file.getFile());
+            // Use a Transformer for output
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
 
+            DOMSource source = new DOMSource(dom);
+
+            StreamResult result = new StreamResult(entityStream);
+            transformer.transform(source, result);
+
+
+        } catch (ParserConfigurationException e) {
+            LOG.error("can't initialize documentBuilder  ", e);
+        } catch (SAXException e) {
+            LOG.error("parsing error  ", e);
+        } catch (TransformerConfigurationException e) {
+            LOG.error("can't initialize xml transformer  ", e);
+        } catch (TransformerException e) {
+            LOG.error("can't transform xml", e);
+        }
     }
 }

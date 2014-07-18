@@ -35,4 +35,13 @@ To test rest service with curl:
 
         curl -v -X POST -d @incident.xml http://localhost:8181/cxf/inc/incidents/report -H "Content-Type: text/xml"
 
-        curl -v -X GET http://localhost:8181/cxf/inc/incidents/incident/123
+or :
+
+
+
+      curl -v -X POST -T <path>/rest-consumer-example/src/test/resources/incident.xml   http://localhost:8181/cxf/inc/incidents/report -H "Content-Type: text/xml"
+
+
+ curl -v -X GET http://localhost:8181/cxf/inc/incidents/incident/637807
+
+

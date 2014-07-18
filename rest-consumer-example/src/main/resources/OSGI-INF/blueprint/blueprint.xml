@@ -19,12 +19,12 @@
             <ref component-id="myservice"/>
         </jaxrs:serviceBeans>
 
-        <jaxrs:providers>
-            <bean class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
-        </jaxrs:providers>
+
   </jaxrs:server>
 
   <bean id="myservice" class="biz.majorov.camel.incident.IncidentService" />
+
+   <bean id="myProvider" class="biz.majorov.camel.incident.NMCXFProvider" />
 
 
 <!-- Defined the server endpoint to create the cxf-rs consumer -->
@@ -39,7 +39,7 @@
            <from uri="file:work/inc/input" />
            <log message="Receiving order ${file:name}" />
 	  <!-- route starts from the cxf webservice in POJO mode -->
-            <to uri="cxfrs://bean://rsClient"/>
+            <to uri="cxfrs://bean://rsClient?provider=#myProvider"/>
 			 
 		</route>
 

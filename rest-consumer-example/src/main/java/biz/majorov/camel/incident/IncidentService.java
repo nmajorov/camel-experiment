@@ -71,7 +71,8 @@ public class IncidentService {
     public Response getIncident(@PathParam("id") String id){
         LOG.info("get incident by: " + id);
         Response r;
-        Incident incident = storage.get(id);
+        Long longId = Long.parseLong(id);
+        Incident incident = storage.get(longId);
         
         if (incident == null){
              LOG.info("incident not found for id: " + id);
