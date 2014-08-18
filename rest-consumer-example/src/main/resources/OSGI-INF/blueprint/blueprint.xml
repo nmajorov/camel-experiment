@@ -13,7 +13,7 @@
 
     <!-- create rest service -->
 
-    <jaxrs:server id="rsServer" address="/inc">
+    <jaxrs:server id="rsServer" address="http://localhost:8181/cxf/inc">
         <jaxrs:serviceBeans>
             <ref component-id="myservice"/>
         </jaxrs:serviceBeans>
@@ -21,14 +21,15 @@
 
     </jaxrs:server>
 
-    <bean id="myservice" class="biz.majorov.camel.incident.IncidentService"/>
+    <bean id="myservice" class="biz.majorov.camel.incident.IncidentServiceImpl"/>
 
     <bean id="myProvider" class="biz.majorov.camel.incident.NMCXFProvider"/>
-
-
+                                                                           <!--
+    <reference interface="org.apache.cxf.transport.http.DestinationRegistry" timeout="30000" availability="mandatory"/>
+                                                                               -->
     <!-- Defined the server endpoint to create the cxf-rs consumer -->
     <cxf:rsClient id="rsClient" address="http://localhost:8181/cxf/inc/incidents/report"
-                  serviceClass="biz.majorov.camel.incident.IncidentService"
+                  serviceClass="biz.majorov.camel.incident.IncidentServiceImpl"
                   loggingFeatureEnabled="true"/>
 
 

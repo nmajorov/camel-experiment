@@ -20,7 +20,7 @@
 
     <modules>
         <module>udp-consumer-example</module>
-    <module>rest-consumer-example</module>
+        <module>rest-consumer-example</module>
   </modules>
 
 
