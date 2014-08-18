@@ -16,18 +16,14 @@
  */
 package biz.majorov.camel.incident;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Random;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Interface with the services we want to expose as web services using code first.
