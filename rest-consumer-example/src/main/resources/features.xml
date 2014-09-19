@@ -1,0 +1,13 @@
+<features name="quickstart-rest-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+  <repository>mvn:org.apache.cxf.karaf/apache-cxf/${cxf-version}/xml/features</repository>
+  <repository>mvn:io.fabric8/fabric8-karaf/${fabric8.karaf.version}/xml/features</repository>
+
+  <feature name="rest-consumer-example" version="${project.version}" resolver="(obr)">
+      <feature version="${cxf-version}">cxf-jaxrs</feature>
+      <bundle>mvn:biz.majorov.camel/rest-consumer-example/${project.version}</bundle>
+  </feature>
+
+</features>
+
